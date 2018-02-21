@@ -1,2 +1,19 @@
 /* This file is for your main application css. */
 @import "bootstrap";
+
+nav.myNavbar {
+    margin-bottom: 50px;
+}
+
+a.navbar-brand {
+    color: white !important;
+}
+
+#logged-in{
+    color: white;
+    text-align: right;
+}
+
+#task-title {
+    padding-bottom: 30px;
+}

@@ -1,5 +1,7 @@
-<h2>New Task</h2>
+<div class="col-6 offset-3">
+    <h2>New Task</h2>
 
-<%= render "form.html", Map.put(assigns, :action, task_path(@conn, :create)) %>
+    <%= render "form.html", Map.put(assigns, :action, task_path(@conn, :create)) %>
 
-<span><%= link "Back", to: task_path(@conn, :index) %></span>
+    <span><%= link "Back", to: task_path(@conn, :index) %></span>
+</div>

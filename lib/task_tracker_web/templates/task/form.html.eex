@@ -12,8 +12,9 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :user_id, class: "control-label" %>
-    <%= text_input f, :user_id, class: "form-control" %>
+    <%= label f, "Assign To", class: "control-label" %>
+    <%# found select from documentation https://hexdocs.pm/phoenix_html/Phoenix.HTML.Form.html#select/4 %>
+    <%= select f, :user_id, Enum.map(@users, &{&1.name, &1.id}), class: "form-control" %>
     <%= error_tag f, :user_id %>
   </div>
 
@@ -24,14 +25,15 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :complete, class: "control-label" %>
+    <%= label f, "Completed", class: "control-label" %>
     <%= checkbox f, :complete, class: "checkbox" %>
     <%= error_tag f, :complete %>
   </div>
 
-  <div class="form-group">
-    <%= label f, :work_time, class: "control-label" %>
-    <%= number_input f, :work_time, class: "form-control" %>
+  <%# found out about form-inline from https://getbootstrap.com/docs/4.0/components/forms/ %>
+  <div class="form-inline form-group">
+    <%= label f, :work_time, class: "control-label", style: "padding-right: 10px" %>
+    <%= number_input f, :work_time, class: "form-control", min: 0, step: "15", value: "0" %>
     <%= error_tag f, :work_time %>
   </div>
 

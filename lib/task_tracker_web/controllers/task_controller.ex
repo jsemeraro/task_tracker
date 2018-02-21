@@ -3,6 +3,7 @@ defmodule TaskTrackerWeb.TaskController do
 
   alias TaskTracker.Issues
   alias TaskTracker.Issues.Task
+  alias TaskTracker.Accounts
 
   def index(conn, _params) do
     tasks = Issues.list_tasks()
@@ -11,10 +12,12 @@ defmodule TaskTrackerWeb.TaskController do
 
   def new(conn, _params) do
     changeset = Issues.change_task(%Task{})
-    render(conn, "new.html", changeset: changeset)
+    users = Accounts.list_users()
+    render(conn, "new.html", changeset: changeset, users: users)
   end
-
+  
   def create(conn, %{"task" => task_params}) do
+    IO.puts(inspect task_params)
     case Issues.create_task(task_params) do
       {:ok, task} ->
         conn
@@ -33,19 +36,20 @@ defmodule TaskTrackerWeb.TaskController do
   def edit(conn, %{"id" => id}) do
     task = Issues.get_task!(id)
     changeset = Issues.change_task(task)
-    render(conn, "edit.html", task: task, changeset: changeset)
+    users = Accounts.list_users()
+    render(conn, "edit.html", task: task, changeset: changeset, users: users)
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Issues.get_task!(id)
-
+    users = Accounts.list_users()
     case Issues.update_task(task, task_params) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
         |> redirect(to: task_path(conn, :show, task))
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", task: task, changeset: changeset)
+        render(conn, "edit.html", task: task, changeset: changeset, users: users)
     end
   end
 

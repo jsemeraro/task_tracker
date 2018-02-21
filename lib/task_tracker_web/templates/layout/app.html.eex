@@ -8,23 +8,28 @@
     <meta name="author" content="">
 
     <title>Hello TaskTracker!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.scss") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
   <body>
-  <%# copied from Nat's lecture notes %>
-    <div class="row">
-      <div class="col-3 offset-9">
+    <%# looked at https://getbootstrap.com/docs/4.0/components/navbar/ to understand navbars and took the button line from same place %>
+    <nav class="navbar navbar-expand navbar-dark bg-dark myNavbar">
+      <%= link "TaskTracker", to: "/", class: "navbar-brand" %>
+      <div class="navbar-nav">
+        <%= link "Users", to: "/users", method: "get", class: "nav-item nav-link" %>
+        <%= link "Tasks", to: "/tasks", method: "get", class: "nav-item nav-link" %>
+        <span class="nav-item nav-link">
+        <%# source Nat's lecture notes %>
         <%= if @current_user do %>
-          <p>
-            Logged in as: <%= @current_user.name %> |
-            <%= link "Log Out", to: "/session", method: :delete %>
-          </p>
+          Logged in as: <%= @current_user.name %> |
+          <%= link "Log Out", to: "/session", method: :delete %>
         <% else %>
-          <p>Not logged in.</p>
+          <%= link "Log In", to: "/" %>
         <% end %>
+        </span>
       </div>
-    </div>
+    </nav>
+
     <div class="container">
       <%# attribution for flash messages: Nat's notes %>
       <%= if get_flash(@conn, :info) do %>

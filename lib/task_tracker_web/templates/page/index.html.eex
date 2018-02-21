@@ -1,14 +1,40 @@
-<%# copied from Nat's notes: http://www.ccs.neu.edu/home/ntuck/courses/2018/01/cs4550/notes/12-microblog/notes.html %>
-<h1>Log In</h1>
-<!-- session_path(@conn, :create) -->
-<%= form_tag("/session", method: :post) do %>
-  <div class="form-group">
-    Email
-    <input type="email" name="email" placeholder="user@example.com" >
-  </div>
-  <!-- passwords come later -->
-  <div class="form-group">
-    <button class="btn btn-primary">Log in</button>
-    <%= link "Register", to: user_path(@conn, :new) %>
+<%= if !@current_user do %>
+  <%# copied from Nat's notes: http://www.ccs.neu.edu/home/ntuck/courses/2018/01/cs4550/notes/12-microblog/notes.html %>
+  <h1>Log In</h1>
+  <!-- session_path(@conn, :create) -->
+  <%= form_tag("/session", method: :post) do %>
+    <div class="form-group">
+      Email
+      <input type="email" name="email" placeholder="user@example.com" >
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">Log in</button>
+      <%= link "Register", to: user_path(@conn, :new) %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="dashboard">
+    <h1 id="task-title" style="text-align: center">Your Tasks: </h1>
+    <%= for t <- @tasks do %>
+      <%= if t.user_id == @current_user.id do %>
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+            <h5 class="card-title" style="text-align: center"><%= t.title %></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%= t.complete %></h6>
+            <p class="card-text"><%= t.description %></p>
+            <div class="row">
+              <div class="col-6">
+              <a href="#" class="card-link">Edit</a>
+              </div>
+              <div class="col-6">
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <%# create function in controller to display tasks for this user to get done %>
   </div>
 <% end %>
