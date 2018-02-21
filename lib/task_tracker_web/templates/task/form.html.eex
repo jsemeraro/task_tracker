@@ -33,7 +33,7 @@
   <%# found out about form-inline from https://getbootstrap.com/docs/4.0/components/forms/ %>
   <div class="form-inline form-group">
     <%= label f, :work_time, class: "control-label", style: "padding-right: 10px" %>
-    <%= number_input f, :work_time, class: "form-control", min: 0, step: "15", value: "0" %>
+    <%= number_input f, :work_time, id: "work-time", class: "form-control", min: 0, step: "15", value: "0" %>
     <%= error_tag f, :work_time %>
   </div>
 
@@ -41,3 +41,18 @@
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
+
+<script>
+  $(function() {
+    // https://api.jquery.com/blur/
+    $("#work-time").blur(function() {
+      let val = parseInt($(this).val());
+      let modding = val%15;
+      let val2 = val-modding;
+      if (val2 == 0) {
+        val2 = 15;
+      }
+      $(this).val(val2);
+    });
+  });
+</script>

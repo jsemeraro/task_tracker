@@ -12,6 +12,7 @@
   </head>
 
   <body>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <%# looked at https://getbootstrap.com/docs/4.0/components/navbar/ to understand navbars and took the button line from same place %>
     <nav class="navbar navbar-expand navbar-dark bg-dark myNavbar">
       <%= link "TaskTracker", to: "/", class: "navbar-brand" %>
@@ -44,6 +45,5 @@
       </main>
 
     </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
