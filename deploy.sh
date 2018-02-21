@@ -30,8 +30,8 @@ mkdir -p ~/www/task_tracker
 REL_TAR=~/src/task_tracker/_build/prod/rel/task_tracker/releases/0.0.1/task_tracker.tar.gz
 (cd ~/www/task_tracker && tar xzvf $REL_TAR)
 
-mix ecto.create
-mix ecto.migrate
+MIX_ENV=prod mix ecto.create
+MIX_ENV=prod mix ecto.migrate
 
 crontab - <<CRONTAB
 @reboot bash /home/task/src/task_tracker/start.sh
