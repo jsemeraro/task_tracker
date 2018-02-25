@@ -1,32 +1,27 @@
-<h2>Listing Tasks</h2>
+<h2 style="margin-bottom: 1em">All Tasks</h2>
 
 <table class="table">
   <thead>
     <tr>
+      <th>Status</th>
       <th>Title</th>
-      <th>Description</th>
-      <th>Complete</th>
-      <th>Work time</th>
-      <th>Assigned User</th>
-
-      <th></th>
+      <th>Assigned to</th>
     </tr>
   </thead>
   <tbody>
-<%= for task <- @tasks do %>
-    <tr>
-      <td><%= task.title %></td>
-      <td><%= task.description %></td>
-      <td><%= task.complete %></td>
-      <td><%= task.work_time %></td>
-      <td><%= task.user_id %></td>
-
-      <td class="text-right">
-        <span><%= link "Edit", to: task_path(@conn, :edit, task), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-      </td>
-    </tr>
-<% end %>
+    <%= for task <- @tasks do %>
+      <tr>
+        <td>
+          <%= if task.complete == true  do %>
+          <span class="badge badge-success" id="complete-tag-complete">Complete</span>
+          <% else %>
+          <span class="badge badge-danger" id="complete-tag-incomplete">Incomplete</span>
+          <% end %>
+        </td>
+        <td><%= link task.title, to: task_path(@conn, :show, task), class: "title" %></td>
+        <td><%= TaskTracker.Accounts.get_user(task.user_id).name %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 

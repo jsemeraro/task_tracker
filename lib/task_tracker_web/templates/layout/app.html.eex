@@ -12,15 +12,18 @@
   </head>
 
   <body>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <%# looked at https://getbootstrap.com/docs/4.0/components/navbar/ to understand navbars and took the button line from same place %>
     <nav class="navbar navbar-expand navbar-dark bg-dark myNavbar">
       <%= link "TaskTracker", to: "/", class: "navbar-brand" %>
-      <div class="navbar-nav">
+      <div class="navbar-nav mr-auto">
         <%= link "Users", to: "/users", method: "get", class: "nav-item nav-link" %>
         <%= link "Tasks", to: "/tasks", method: "get", class: "nav-item nav-link" %>
-        <span class="nav-item nav-link">
+      </div>
+      <div class="navbar-nav ml-auto">
         <%# source Nat's lecture notes %>
+        <span class="nav-item nav-link">
         <%= if @current_user do %>
           Logged in as: <%= @current_user.name %> |
           <%= link "Log Out", to: "/session", method: :delete %>

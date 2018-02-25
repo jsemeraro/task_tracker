@@ -1,20 +1,18 @@
-<h2>Show Task</h2>
+<h2><%= @task.title %></h2>
 
 <ul>
-
-  <li>
-    <strong>Title:</strong>
-    <%= @task.title %>
-  </li>
-
   <li>
     <strong>Description:</strong>
     <%= @task.description %>
   </li>
 
   <li>
-    <strong>Complete:</strong>
-    <%= @task.complete %>
+    <strong>Status:</strong>
+    <%= if @task.complete do %>
+      Complete
+    <% else %>
+      Incomplete
+    <% end %>
   </li>
 
   <li>
@@ -22,7 +20,11 @@
     <%= @task.work_time %>
   </li>
 
+  <li>
+    <strong>Assigned to:</strong>
+    <%= TaskTracker.Accounts.get_user(@task.user_id).name %>
+  </li>
 </ul>
 
-<span><%= link "Edit", to: task_path(@conn, :edit, @task) %></span>
-<span><%= link "Back", to: task_path(@conn, :index) %></span>
+<span><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
+<span><%= #link "Back", to: task_path(@conn, :index) %></span>

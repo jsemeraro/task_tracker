@@ -1,24 +1,19 @@
-<h2>Listing Users</h2>
+<h2 style="margin-bottom: 1em">All Users</h2>
 
 <table class="table">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Email</th>
       <th>Name</th>
-
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <%= for user <- @users do %>
-    <tr>
-      <td><%= user.email %></td>
-      <td><%= user.name %></td>
-
-      <td class="text-right">
-        <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-      </td>
+    <tr id="task-row">
+      <td><%= user.id %></td>
+      <td><%= link user.email, to: user_path(@conn, :show, user), class: "btn btn-default btn-xs", id: "task-link" %></td>
+      <td><%= link user.name, to: user_path(@conn, :show, user), class: "btn btn-default btn-xs", id: "task-link" %></td>
     </tr>
     <% end %>
   </tbody>

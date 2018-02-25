@@ -13,23 +13,30 @@
     </div>
   <% end %>
 <% else %>
-  <div class="dashboard">
-    <h1 id="task-title" style="text-align: center">Your Tasks: </h1>
+  <div class="dashboard row">
+    <h1 id="task-title" class="col-12" style="text-align: center">Your Tasks: </h1>
     <%= for t <- @tasks do %>
       <%= if t.user_id == @current_user.id do %>
-        <div class="col-6">
+        <div class="col-6" id="show-card" style="margin-bottom: 15px;">
           <div class="card">
             <div class="card-body">
-            <h5 class="card-title" style="text-align: center"><%= t.title %></h5>
-            <h6 class="card-subtitle mb-2 text-muted"><%= t.complete %></h6>
-            <p class="card-text"><%= t.description %></p>
-            <div class="row">
-              <div class="col-6">
-              <a href="#" class="card-link">Edit</a>
+              <h3 class="card-title">
+                <strong><%= t.title %></strong>
+              </h3>
+              <p class="card-text" id="card-description"><%= t.description %></p>
+              <div class="row">
+                <div class="col-7">
+                  <%= link "Show", to: task_path(@conn, :show, t), class: "card-link" %>
+                  <%= link "Edit", to: task_path(@conn, :edit, t), class: "card-link" %>
+                </div>
+                <div class="col-4">
+                  <%= if t.complete == true  do %>
+                    <span class="badge badge-success" id="complete-tag-complete">Complete</span>
+                  <% else %>
+                    <span class="badge badge-danger" id="complete-tag-incomplete">Incomplete</span>
+                  <% end %>
+                </div>
               </div>
-              <div class="col-6">
-              </div>
-            </div>
             </div>
           </div>
         </div>
