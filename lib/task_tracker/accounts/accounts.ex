@@ -163,6 +163,7 @@ defmodule TaskTracker.Accounts do
   def have_underlings(id) do
     undrlngs = get_underlings(id)
     if undrlngs == %{} do
+      IO.puts("no underlings")
       false
     else
       true
