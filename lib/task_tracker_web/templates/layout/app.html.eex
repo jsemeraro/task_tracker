@@ -17,21 +17,30 @@
     <%# looked at https://getbootstrap.com/docs/4.0/components/navbar/ to understand navbars and took the button line from same place %>
     <nav class="navbar navbar-expand navbar-dark bg-dark myNavbar">
       <%= link "TaskTracker", to: "/", class: "navbar-brand" %>
+      <%= if @current_user do %>
       <div class="navbar-nav mr-auto">
         <%= link "Users", to: "/users", method: "get", class: "nav-item nav-link" %>
+        <%= if TaskTracker.Accounts.have_underlings(@current_user.id) do %>
+        <%= link "Team Tasks", to: "/teamtasks", method: "get", class: "nav-item nav-link" %>
+        <%= link "New Task", to: task_path(@conn, :new), class: "nav-item nav-link" %>
+        <% else %>
         <%= link "Tasks", to: "/tasks", method: "get", class: "nav-item nav-link" %>
+        <% end %>
       </div>
       <div class="navbar-nav ml-auto">
         <%# source Nat's lecture notes %>
         <span class="nav-item nav-link">
-        <%= if @current_user do %>
           Logged in as: <%= @current_user.name %> |
           <%= link "Log Out", to: "/session", method: :delete %>
-        <% else %>
-          <%= link "Log In", to: "/" %>
-        <% end %>
         </span>
       </div>
+      <% else %>
+      <div class="navbar-nav ml-auto">
+        <span class="nav-item nav-link">
+          <%= link "Log In", to: "/" %>
+        </span>
+      </div>
+      <% end %>
     </nav>
 
     <div class="container">

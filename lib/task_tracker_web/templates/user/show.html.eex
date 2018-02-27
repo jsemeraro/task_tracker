@@ -1,4 +1,11 @@
-<h2>Show User</h2>
+<%= if !((@curr_usr_id == @user.id) or 
+        (TaskTracker.Accounts.isUsrUnderling(@user.id, @curr_usr_id)) or 
+        (TaskTracker.Accounts.isUsrUnderling(@curr_usr_id, @user.id)) or
+        (TaskTracker.Accounts.have_manager(@user.id))) do %>
+  <h1><%= @user.name %> <%= button "Manage", to: manager_path(@conn, :create, %{manager_id: @curr_usr_id, underling_id: @user.id}), class: "btn btn-primary" %></h1>
+<% else %>
+<h1><%= @user.name %></h1>
+<% end %>
 
 <ul>
 
@@ -7,12 +14,24 @@
     <%= @user.email %>
   </li>
 
+  <%= if TaskTracker.Accounts.have_manager(@user.id) do %>
   <li>
-    <strong>Name:</strong>
-    <%= @user.name %>
+    <strong>Manager:</strong>
+    <%= TaskTracker.Accounts.get_user(TaskTracker.Accounts.get_manager(@user.id)).name %>
   </li>
+  <% end %>
 
+  <%= if TaskTracker.Accounts.have_underlings(@user.id) do %>
+  <li><strong>Underlings:</strong></li>
+  <ul>
+  <%= for underling <- TaskTracker.Accounts.get_underlings(@user.id) do %>
+    <li>
+      <%= TaskTracker.Accounts.get_user(elem(underling, 0)).name %>
+    </li>
+  <% end %>
+  </ul>
+  <% end %>
 </ul>
 
 <span><%= link "Edit", to: user_path(@conn, :edit, @user) %></span>
-<span><%= link "Back", to: user_path(@conn, :index) %></span>
+<span><%= #link "Back", to: user_path(@conn, :index) %></span>

@@ -42,6 +42,5 @@
         </div>
       <% end %>
     <% end %>
-    <%# create function in controller to display tasks for this user to get done %>
   </div>
 <% end %>

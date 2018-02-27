@@ -1,7 +1,11 @@
 <div class="col-6 offset-3">
-    <h1 style="margin-bottom: 5vh;">New Task</h1>
 
+    <%= if TaskTracker.Accounts.have_underlings(@curr_user) do %>
+    <h1 style="margin-bottom: 5vh;">New Task</h1>
     <%= render "form.html", Map.put(assigns, :action, task_path(@conn, :create)) %>
+    <% else %>
+    <div class="alert alert-danger" style="text-align: center">You currently are not a manager<br/> If you become a manager, you can assign tasks to those under you</div>
+    <% end %>
 
     <span><%= #link "Back", to: task_path(@conn, :index) %></span>
 </div>

@@ -1,0 +1,31 @@
+<h2 style="margin-bottom: 1em">
+Team's Tasks
+<span><%= link "All Tasks", to: task_path(@conn, :index), class: "btn btn-primary" %></span>
+</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Title</th>
+      <th>Assigned to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for task <- @tasks do %>
+    <%= if List.first(task) != nil do %>
+      <tr>
+        <td>
+          <%= if List.first(task).complete == true  do %>
+          <span class="badge badge-success" id="complete-tag-complete">Complete</span>
+          <% else %>
+          <span class="badge badge-danger" id="complete-tag-incomplete">Incomplete</span>
+          <% end %>
+        </td>
+        <td><%= link List.first(task).title, to: task_path(@conn, :show, List.first(task)), class: "title" %></td>
+        <td><%= TaskTracker.Accounts.get_user(List.first(task).user_id).name %></td>
+      </tr>
+    <% end %>
+    <% end %>
+  </tbody>
+</table>

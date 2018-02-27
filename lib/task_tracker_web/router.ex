@@ -28,6 +28,8 @@ defmodule TaskTrackerWeb.Router do
     get "/", PageController, :index
     resources "/users", UserController
     resources "/tasks", TaskController
+    resources "/managers", ManagerController
+    get "/teamtasks", TaskController, :show_ndrlng
     post "/session", SessionController, :create
     delete "/session", SessionController, :delete
   end

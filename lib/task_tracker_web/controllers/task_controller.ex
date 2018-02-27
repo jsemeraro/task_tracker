@@ -12,12 +12,12 @@ defmodule TaskTrackerWeb.TaskController do
 
   def new(conn, _params) do
     changeset = Issues.change_task(%Task{})
-    users = Accounts.list_users()
-    render(conn, "new.html", changeset: changeset, users: users)
+    curr_user = conn.assigns[:current_user].id
+    users = Accounts.underlings_ids(curr_user)
+    render(conn, "new.html", changeset: changeset, users: users, curr_user: curr_user)
   end
   
   def create(conn, %{"task" => task_params}) do
-    IO.puts(inspect task_params)
     case Issues.create_task(task_params) do
       {:ok, task} ->
         conn
@@ -31,6 +31,20 @@ defmodule TaskTrackerWeb.TaskController do
   def show(conn, %{"id" => id}) do
     task = Issues.get_task!(id)
     render(conn, "show.html", task: task)
+  end
+
+  def show_ndrlng(conn, _params) do
+    curr_user = conn.assigns[:current_user].id
+    ndrlngs = TaskTracker.Accounts.underlings_ids(curr_user)
+    tasks = Enum.map(ndrlngs, fn(curr_user)-> 
+      all_tasks = Issues.list_tasks()
+      Enum.map(all_tasks, fn (t) ->
+        if t.user_id == curr_user.id do
+          t
+        end
+      end)
+    end)
+    render(conn, "show_ndrlng.html", tasks: tasks)
   end
 
   def edit(conn, %{"id" => id}) do
