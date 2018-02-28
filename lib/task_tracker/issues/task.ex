@@ -2,6 +2,7 @@ defmodule TaskTracker.Issues.Task do
   use Ecto.Schema
   import Ecto.Changeset
   alias TaskTracker.Issues.Task
+  alias TaskTracker.Issues.TimeBlock
 
 
   schema "tasks" do
@@ -10,6 +11,8 @@ defmodule TaskTracker.Issues.Task do
     field :description, :string
     field :title, :string
     field :work_time, :integer
+
+    has_many :time_blocks, TimeBlock
 
     timestamps()
   end

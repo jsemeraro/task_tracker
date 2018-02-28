@@ -20,7 +20,7 @@ defmodule TaskTracker.Mixfile do
   def application do
     [
       mod: {TaskTracker.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :timex]
     ]
   end
 
@@ -41,10 +41,11 @@ defmodule TaskTracker.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:distillery, "~> 1.5", runtime: false}
+      {:distillery, "~> 1.5", runtime: false},
+      {:timex, "~> 3.1"}
     ]
   end
-
+  
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to create, migrate and run the seeds file at once:
   #

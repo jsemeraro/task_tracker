@@ -163,6 +163,7 @@ defmodule TaskTracker.Accounts do
   def have_underlings(id) do
     undrlngs = get_underlings(id)
     if undrlngs == %{} do
+      IO.puts("no underlings")
       false
     else
       true
@@ -178,7 +179,7 @@ defmodule TaskTracker.Accounts do
       |> Enum.into(%{})
   end
 
-  def underlings_ids(id) do
+  def underlings_users(id) do
     getundrlngs = get_underlings(id)
     undr_list = Enum.map(getundrlngs, fn(under) -> get_user(elem(under, 0)) end)
     undr_list
