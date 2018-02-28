@@ -8,6 +8,8 @@ defmodule TaskTracker.Issues do
 
   alias TaskTracker.Issues.Task
 
+  use Timex
+
   @doc """
   Returns the list of tasks.
 
@@ -130,8 +132,54 @@ defmodule TaskTracker.Issues do
       iex> get_time_block!(456)
       ** (Ecto.NoResultsError)
 
-  """
+    """
+  # gets a time block by a specific id
   def get_time_block!(id), do: Repo.get!(TimeBlock, id)
+  def get_time_block(id), do: Repo.get(TimeBlock, id)
+
+  # returns all time blocks that belong to a task_id
+  def get_all_time_blocks(task_id) do
+    Repo.all(from t in TimeBlock, where: t.task_id == ^task_id)
+  end
+
+  # get the next end time that is nil
+  def next_end_time(task_id) do
+    Repo.one(from t in TimeBlock, 
+      where: t.task_id == ^task_id and is_nil(t.end_time))
+  end
+
+  # determine if you should show the end button or not
+  def show_end_btn(task_id) do
+    x = next_end_time(task_id)
+    if x == nil do
+      false
+    else
+      true
+    end
+  end
+
+  def convert_time(time) do
+    if is_nil(time) do 
+      "Unset"
+    else
+      hr = to_string(DateTime.to_time(Timex.Timezone.convert(time, "America/New_York")).hour)
+      if String.length(hr) < 2 do
+        hr = "0"<>hr
+      end
+
+      min = to_string(DateTime.to_time(Timex.Timezone.convert(time, "America/New_York")).minute)
+      hr <> ":" <> min
+    end
+  end
+
+  def convert_datetime(time) do
+    if is_nil(time) do
+      "Unset"
+    else
+      DateTime.to_string(time)
+    end
+  end
+
 
   @doc """
   Creates a time_block.
@@ -144,8 +192,10 @@ defmodule TaskTracker.Issues do
       iex> create_time_block(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
-  """
-  def create_time_block(attrs \\ %{}) do
+    """
+  def create_time_block(task_id) do
+    start = DateTime.utc_now()
+    attrs = %{start_time: start, end_time: nil, task_id: task_id}
     %TimeBlock{}
     |> TimeBlock.changeset(attrs)
     |> Repo.insert()
@@ -163,7 +213,22 @@ defmodule TaskTracker.Issues do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_time_block(%TimeBlock{} = time_block, attrs) do
+  def update_time_block(%TimeBlock{} = time_block) do
+    end_time = DateTime.utc_now()
+    attrs = %{start_time: time_block.start_time, end_time: end_time, task_id: time_block.task_id}
+
+    time_block
+    |> TimeBlock.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def edit_time_block(%TimeBlock{} = time_block, start_time, end_time) do
+    IO.inspect(start_time)
+    start_time = DateTime.from_unix(elem(Integer.parse(start_time), 0))
+    end_time = DateTime.from_unix(elem(Integer.parse(end_time),0))
+
+    attrs = %{start_time: start_time, end_time: end_time, task_id: time_block.task_id}
+
     time_block
     |> TimeBlock.changeset(attrs)
     |> Repo.update()

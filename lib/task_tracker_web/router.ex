@@ -26,10 +26,14 @@ defmodule TaskTrackerWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+
     resources "/users", UserController
+
     resources "/tasks", TaskController
-    resources "/managers", ManagerController
     get "/teamtasks", TaskController, :show_ndrlng
+
+    resources "/managers", ManagerController
+    
     post "/session", SessionController, :create
     delete "/session", SessionController, :delete
   end
@@ -38,6 +42,8 @@ defmodule TaskTrackerWeb.Router do
   # Other scopes may use custom stacks.
   scope "/api/v1", TaskTrackerWeb do
     pipe_through :api
-    resources "/time_blocks", TimeBlockController, except: [:new, :edit]
+    resources "/time_blocks", TimeBlockController, except: [:new]
+    patch "/time_blocks/:id", TimeBlockController, :update
+    patch "/time_blocks/:id/edit", TimeBlockController, :edit
   end
 end

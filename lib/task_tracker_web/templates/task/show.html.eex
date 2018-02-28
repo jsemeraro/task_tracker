@@ -1,4 +1,11 @@
+<% use Timex %>
 <h2><%= @task.title %></h2>
+
+<%= if TaskTracker.Issues.show_end_btn(@task.id) do %>
+<button class="end-time btn btn-danger" id="end" data-tblock-id="<%= TaskTracker.Issues.next_end_time(@task.id).id %>">End</button>
+<% else %>
+<button class="start-time btn-primary btn" id="start" data-task-id="<%= @task.id %>">Start</button>
+<% end %>
 
 <ul>
   <li>
@@ -16,15 +23,82 @@
   </li>
 
   <li>
-    <strong>Work time:</strong>
-    <%= @task.work_time %>
+    <strong>Start time:</strong>
+  </li>
+
+  <li>
+    <strong>End time:</strong>
   </li>
 
   <li>
     <strong>Assigned to:</strong>
     <%= TaskTracker.Accounts.get_user(@task.user_id).name %>
   </li>
+
+  <li>
+    <strong>Time Blocks: </strong>
+    <table>
+      <thead>
+        <tr>
+          <th>Start</th>
+          <th>End</th>
+        </tr>
+      </thead>
+      <tbody>
+      <%= for tb <- TaskTracker.Issues.get_all_time_blocks(@task.id) do %>
+        <tr id="tblock-<%= tb.id %>" >
+          <td><%= TaskTracker.Issues.convert_time(TaskTracker.Issues.get_time_block(tb.id).start_time) %></td>
+          <td><%= TaskTracker.Issues.convert_time(TaskTracker.Issues.get_time_block(tb.id).end_time) %></td>
+          <td><button class="edit-times" disabled id="edit-<%= tb.id %>" data-tblock-id="<%= tb.id %>">Edit</button></td>
+        </tr>
+        <tr id="tblock-form-<%= tb.id %>" style="display: none;">
+          <td><input type="datetime-local" name="start" id="start-<%= tb.id %>" value="<%= TaskTracker.Issues.convert_datetime(TaskTracker.Issues.get_time_block(tb.id).start_time) %>" /></td>
+          <td><input type="datetime-local" name="end" id="end-<%= tb.id %>" value="<%= TaskTracker.Issues.convert_datetime(TaskTracker.Issues.get_time_block(tb.id).end_time) %>" /></td>
+          <td><button class="save-times" id="save-<%= tb.id %>" data-tblock-id="<%= tb.id %>">Save</button></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </li>
 </ul>
 
+
 <span><%= link "Edit", to: task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
-<span><%= #link "Back", to: task_path(@conn, :index) %></span>
+
+<script>
+  $(function() {
+    $("#start").click(function() {
+      let id = $(this).attr("data-task-id");
+      $.post("/api/v1/time_blocks", {task_id: id});
+    });
+
+    $("#end").click(function() {
+      let id = $(this).attr("data-tblock-id");
+      $.ajax({
+        method: 'patch',
+        url: ("/api/v1/time_blocks/").concat(id),
+        data: {id: id}
+      });
+    });
+
+    $(".edit-times").click(function() {
+      let id = $(this).attr("data-tblock-id");
+      $("#tblock-"+id).hide();
+      $("#tblock-form-" + id).show();
+    });
+
+    $(".save-times").click(function()  {
+      let id = $(this).attr("data-tblock-id");
+      $("#tblock-"+id).show();
+      $("tblock-form-" + id).hide();
+      let start = new Date($("#start-" + id).val()).getTime();
+      let end = new Date($("#end-" + id).val()).getTime();
+      
+      $.ajax({
+        method: "patch",
+        url: ("/api/v1/time_blocks/").concat(id).concat("/edit"),
+        data: {id: id, start_time: start, end_time: end}
+      });
+    });
+  });
+</script>

@@ -11,8 +11,9 @@ defmodule TaskTrackerWeb.TimeBlockController do
     render(conn, "index.json", time_blocks: time_blocks)
   end
 
-  def create(conn, %{"time_block" => time_block_params}) do
-    with {:ok, %TimeBlock{} = time_block} <- Issues.create_time_block(time_block_params) do
+  # starting time
+  def create(conn, %{"task_id" => task_id}) do
+    with {:ok, %TimeBlock{} = time_block} <- Issues.create_time_block(task_id) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", time_block_path(conn, :show, time_block))
@@ -20,23 +21,28 @@ defmodule TaskTrackerWeb.TimeBlockController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    time_block = Issues.get_time_block!(id)
-    render(conn, "show.json", time_block: time_block)
-  end
+  # stoppig time
+  def update(conn, %{"id" => id}) do
+    time_block = Issues.get_time_block(id)
 
-  def update(conn, %{"id" => id, "time_block" => time_block_params}) do
-    time_block = Issues.get_time_block!(id)
-
-    with {:ok, %TimeBlock{} = time_block} <- Issues.update_time_block(time_block, time_block_params) do
+    with {:ok, %TimeBlock{} = time_block} <- Issues.update_time_block(time_block) do
       render(conn, "show.json", time_block: time_block)
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    time_block = Issues.get_time_block!(id)
+    time_block = Issues.get_time_block(id)
+
     with {:ok, %TimeBlock{}} <- Issues.delete_time_block(time_block) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def edit(conn, %{"id" => id, "start_time" => start_time, "end_time" => end_time}) do
+    time_block = Issues.get_time_block(id)
+
+    with {:ok, %TimeBlock{} = time_block} <- Issues.edit_time_block(time_block, start_time, end_time) do
+      render(conn, "show.json", time_block: time_block)
     end
   end
 end

@@ -3,8 +3,8 @@ defmodule TaskTracker.Repo.Migrations.CreateTimeBlocks do
 
   def change do
     create table(:time_blocks) do
-      add :start_time, :naive_datetime
-      add :end_time, :naive_datetime
+      add :start_time, :utc_datetime
+      add :end_time, :utc_datetime
       add :task_id, references(:tasks, on_delete: :delete_all), null: false
 
       timestamps()

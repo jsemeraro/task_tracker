@@ -13,7 +13,7 @@ defmodule TaskTrackerWeb.TaskController do
   def new(conn, _params) do
     changeset = Issues.change_task(%Task{})
     curr_user = conn.assigns[:current_user].id
-    users = Accounts.underlings_ids(curr_user)
+    users = Accounts.underlings_users(curr_user)
     render(conn, "new.html", changeset: changeset, users: users, curr_user: curr_user)
   end
   
@@ -35,11 +35,11 @@ defmodule TaskTrackerWeb.TaskController do
 
   def show_ndrlng(conn, _params) do
     curr_user = conn.assigns[:current_user].id
-    ndrlngs = TaskTracker.Accounts.underlings_ids(curr_user)
-    tasks = Enum.map(ndrlngs, fn(curr_user)-> 
+    ndrlngs = TaskTracker.Accounts.underlings_users(curr_user)
+    tasks = Enum.map(ndrlngs, fn(underlings)-> 
       all_tasks = Issues.list_tasks()
       Enum.map(all_tasks, fn (t) ->
-        if t.user_id == curr_user.id do
+        if t.user_id == underlings.id do
           t
         end
       end)
